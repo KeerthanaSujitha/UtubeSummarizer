@@ -16,7 +16,6 @@
               <div class="form">
                 <input type="text" id="urlTextBox" class="form-field animation a3" placeholder="Enter the YouTube Url">
                 <select id="languageSelector" class="form-field animation a4" style="min-width: 170px;">
-
                     <option selected>Select video language</option>
                     <option value="english">English</option>
                     <option value="arabic">Arabic</option>
@@ -38,18 +37,17 @@
                     <option value="urdu">Urdu</option>
                     <option value="vietnamese">Vietnamese</option>
                     <option value="zulu">Zulu</option>
+                    <option value="telugu">Telugu</option>
                 </select>
-                <!-- <br> -->
-                <!-- <button class="animation a6">LOGIN</button> -->
                 <div class="login-box">
-                    <form>
-                      <a id="submit">
+                  <form id="submitForm">
+                    <button type="submit">
                         <span></span>
                         <span></span>
                         <span></span>
                         <span></span>
                         Submit
-                      </a>
+                     </button>
                     </form>
                 </div>
               </div>
@@ -59,5 +57,36 @@
           
             <script src="./static/script.js" type="module"></script>
         </div>
+
+
+        <script>
+         document.getElementById("submitForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Get the input values
+        var url = document.getElementById("urlTextBox").value;
+        var language = document.getElementById("languageSelector").value;
+
+        // Send an HTTP POST request to the backend
+        fetch('/submit_url', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                url: url,
+                language: language
+            })
+        }).then(response => {
+            if (response.ok) {
+                console.log('URL submitted successfully');
+            } else {
+                console.error('Failed to submit URL');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    });
+      </script>
     </body>
 </html>
