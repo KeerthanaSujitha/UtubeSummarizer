@@ -12,3 +12,4 @@ uvicorn
 pytube
 assemblyai
 googletrans
+openai
