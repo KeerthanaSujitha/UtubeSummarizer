@@ -16,7 +16,7 @@ from summarizer import Summarizer
 import torch
 import requests
 from gtts import gTTS
-
+import shutil
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -71,7 +71,7 @@ async def submit_url(request: Request,url: str = Form(...), language: str = Form
 
     model_id = 'whisper-1'
     language = "en"
-    API_KEY='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'
+    
     audio_file_path = './output/audio.mp3'
     audio_file = open(audio_file_path, 'rb')
 
@@ -98,7 +98,7 @@ async def submit_url(request: Request,url: str = Form(...), language: str = Form
     audio_file = "summary_audio.mp3"
     tts.save(audio_file)
     
-
+    shutil.move(f"{audio_file}", "static/summary_audio.mp3") 
     
     context = {
         "request": request,
