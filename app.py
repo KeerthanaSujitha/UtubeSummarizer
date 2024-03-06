@@ -4,6 +4,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import os
+from dotenv import load_dotenv
+load_dotenv()
 from pytube import YouTube
 import uvicorn
 import fastapi
@@ -62,7 +64,8 @@ async def submit_url(item: URLItem):
     # translated_text = translate_text(mixed_text)
    
 
-    API_KEY = ''
+    # API_KEY = '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'
+    API_KEY = os.getenv("API_KEY")
     model_id = 'whisper-1'
     language = "en"
 
