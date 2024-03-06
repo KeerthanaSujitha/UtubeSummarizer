@@ -12,4 +12,4 @@ uvicorn
 pytube
 assemblyai
 googletrans
-openai
+openai==0.28
