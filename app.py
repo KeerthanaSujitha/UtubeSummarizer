@@ -4,7 +4,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import os
-from dotenv import load_dotenv
 from pytube import YouTube
 import uvicorn
 import fastapi
@@ -35,13 +34,16 @@ def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
+@app.get('/result')
+def index(request: Request):
+    return templates.TemplateResponse("result.html", {"request": request})
 
 
 
-@app.post("/submit_url")
-async def submit_url(item: URLItem):
-    url = item.url
-    language = item.language
+
+ 
+@app.post("/submit_url",response_class=HTMLResponse)
+async def submit_url(request: Request,url: str = Form(...), language: str = Form(...)): 
     # Process the URL and language data as needed
     print(f"Received URL: {url}, Language: {language}")
     
@@ -69,7 +71,7 @@ async def submit_url(item: URLItem):
 
     model_id = 'whisper-1'
     language = "en"
-
+    
     audio_file_path = './output/audio.mp3'
     audio_file = open(audio_file_path, 'rb')
 
@@ -94,7 +96,8 @@ async def submit_url(item: URLItem):
     
     context = {
         "request": request,
-        "url":url
+        "url":url,
+        "summary_text":summary_text
     }
     return templates.TemplateResponse("result.html", context)
 
