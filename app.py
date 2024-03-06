@@ -15,6 +15,8 @@ from transformers import pipeline
 from summarizer import Summarizer
 import torch
 import requests
+from gtts import gTTS
+
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -50,10 +52,8 @@ async def submit_url(request: Request,url: str = Form(...), language: str = Form
     youtube_url = url
     output_path = "./output"
     download_audio(youtube_url, output_path, filename="audio")
-
     
     
-
     # # URL of the file to transcribe
     # FILE_URL = "./output/audio.mp3"
 
@@ -71,7 +71,7 @@ async def submit_url(request: Request,url: str = Form(...), language: str = Form
 
     model_id = 'whisper-1'
     language = "en"
-    
+    API_KEY='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'
     audio_file_path = './output/audio.mp3'
     audio_file = open(audio_file_path, 'rb')
 
@@ -92,13 +92,21 @@ async def submit_url(request: Request,url: str = Form(...), language: str = Form
     summary_text = result[0]['summary_text']
     print("summary_text :",summary_text)
 
+    tts = gTTS(summary_text, lang='en')
+
+    # Save the audio as a temporary file
+    audio_file = "summary_audio.mp3"
+    tts.save(audio_file)
     
+
     
     context = {
         "request": request,
         "url":url,
-        "summary_text":summary_text
+        "summary_text":summary_text,
+        "audio_file":audio_file
     }
+
     return templates.TemplateResponse("result.html", context)
 
 
