@@ -62,7 +62,7 @@ async def submit_url(item: URLItem):
     # translated_text = translate_text(mixed_text)
    
 
-    API_KEY = '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'
+    API_KEY = ''
     model_id = 'whisper-1'
     language = "en"
 
