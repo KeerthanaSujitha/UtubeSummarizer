@@ -5,7 +5,6 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import os
 from dotenv import load_dotenv
-load_dotenv()
 from pytube import YouTube
 import uvicorn
 import fastapi
@@ -13,6 +12,10 @@ import assemblyai as aai
 from googletrans import Translator
 from pydantic import BaseModel
 import openai
+from transformers import pipeline
+from summarizer import Summarizer
+import torch
+import requests
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -47,7 +50,7 @@ async def submit_url(item: URLItem):
     download_audio(youtube_url, output_path, filename="audio")
 
     
-    # aai.settings.api_key = "d31b46660902421d8b7de5c2fd378c9a"
+    
 
     # # URL of the file to transcribe
     # FILE_URL = "./output/audio.mp3"
@@ -64,8 +67,7 @@ async def submit_url(item: URLItem):
     # translated_text = translate_text(mixed_text)
    
 
-    # API_KEY = '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'
-    API_KEY = os.getenv("API_KEY")
+    API_KEY = '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'
     model_id = 'whisper-1'
     language = "en"
 
@@ -79,35 +81,23 @@ async def submit_url(item: URLItem):
     )
     translation_text = response.text
     # Print the results
-    print("Translated Text:", translation_text)
+    # print("Translated Text:", translation_text)
+    
+    summarizer = pipeline("summarization")
 
-    summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
-
-    # Split the content into chunks of 1000 tokens
-    chunk_size = 1000
-    chunks = [content[i:i + chunk_size] for i in range(0, len(content), chunk_size)]
-
-    # Summarize each chunk and store the results
-    summaries = []
-    for chunk in chunks:
-        summary = summarizer(chunk, max_length=40, min_length=8, length_penalty=2.0, num_beams=4, early_stopping=True)
-        summaries.append(summary[0]['summary_text'])
-
-    text = '\n'.join(summaries)
-    print(text)
-
-    # Load BertSum model
-    bertsum_model = Summarizer()
-
-    # Summarize the content to 40 lines
-    summary = bertsum_model(text, num_sentences=40)
-
-    # Print the summarized content
-    print(summary)
-
+    result =summarizer(translation_text, max_length=130, min_length=30, do_sample=False)
     
 
-    return {"message": "URL submitted successfully"}
+    summary_text = result[0]['summary_text']
+    print("summary_text :",summary_text)
+
+    
+    
+    context = {
+        "request": request,
+        "url":url
+    }
+    return templates.TemplateResponse("result.html", context)
 
 
 
@@ -131,4 +121,44 @@ def download_audio(youtube_url, output_path, filename="audio"):
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8000)
     
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # aai.settings.api_key = "098ba046cf1647ff89705531acd882bb"
+
+    # transcriber = aai.Transcriber()
+
+    # audio_url = "./output/audio.mp3"
+
+    # transcript = transcriber.transcribe(audio_url)
+
+    # prompt = "Provide a brief summary of the transcript."
+
+    # result = transcript.lemur.task(prompt)
+
+    # print(result.response)
     
