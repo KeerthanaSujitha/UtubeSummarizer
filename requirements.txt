@@ -15,4 +15,5 @@ googletrans
 openai==0.28
 Jinja2==3.0.3
 requests
+gtts
 python-multipart
