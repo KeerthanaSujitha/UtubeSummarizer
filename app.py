@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import os
+from dotenv import load_dotenv
 from pytube import YouTube
 import uvicorn
 import fastapi
@@ -17,6 +18,7 @@ import torch
 import requests
 from gtts import gTTS
 import shutil
+load_dotenv()
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -68,10 +70,11 @@ async def submit_url(request: Request,url: str = Form(...), language: str = Form
 
     # translated_text = translate_text(mixed_text)
    
-
+    API_KEY = os.getenv("API_KEY")
     model_id = 'whisper-1'
     language = "en"
     
+
     audio_file_path = './output/audio.mp3'
     audio_file = open(audio_file_path, 'rb')
 
