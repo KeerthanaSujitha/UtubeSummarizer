@@ -7,6 +7,7 @@
 
         <style>
             html, body {
+                background: linear-gradient(to bottom right, #f48ccc 0%, #6696e8 100%);
                 height: 100%;
                 margin: 0;
                 padding: 0;
@@ -34,13 +35,14 @@
          <!-- <p>{{url}}</p> -->
          <div class="container">
             <iframe width="740" height="400" src="{{url}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            <div style="margin-left: 2vw;">
-                <h2>Summary</h2>
+            <div style="margin-left: 2vw; padding: 20px; border: 1px solid black; border-radius: 20px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
+                <h2>Summary Text</h2>
                 <p style="text-align: justify;">{{summary_text}}</p>
+                <h2>Summary Audio</h2>
                 <audio controls>
                     <source src="./static/summary_audio.mp3" type="audio/mpeg">
                     Your browser does not support the audio element.
-                  </audio>
+                </audio>
                   
                   
             </div>
